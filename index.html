@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thư viện THCS thông minh - Toán 6 & Khoa học tự nhiên 6</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --ink:#173a78;--muted:#687ba2;--blue:#2c7df6;--green:#22aa65;
+  --purple:#7356e8;--orange:#ff9721;--line:#dce8f7;--card:#fff;
+  --shadow:0 12px 30px rgba(47,86,151,.14);
+}
+html,body{min-height:100%}
+body{
+  margin:0;font-family:"Segoe UI",Arial,sans-serif;color:var(--ink);text-align:center;
+  background:
+    radial-gradient(circle at 6% 92%,rgba(38,169,100,.13) 0 160px,transparent 161px),
+    radial-gradient(circle at 95% 92%,rgba(44,125,246,.13) 0 180px,transparent 181px),
+    linear-gradient(180deg,#f0f7ff 0%,#fffdf9 48%,#f5f9ff 100%);
+}
+header{
+  position:relative;overflow:hidden;padding:25px 20px 29px;color:#fff;
+  background:linear-gradient(110deg,#1fa4ff 0%,#2878ee 54%,#7659e8 100%);
+  border-radius:0 0 34px 34px;box-shadow:0 10px 26px rgba(43,102,202,.22)
+}
+header:before{content:"📐";position:absolute;left:6%;top:16px;font-size:72px;opacity:.3;transform:rotate(-8deg)}
+header:after{content:"🔬";position:absolute;right:7%;bottom:-1px;font-size:78px;opacity:.94}
+.hero-title{font-size:clamp(30px,4vw,54px);font-weight:1000;letter-spacing:.3px}
+.hero-sub{margin-top:7px;color:#edf5ff;font-size:clamp(14px,1.4vw,20px);font-weight:700}
+main{max-width:1030px;margin:0 auto;padding:22px 14px 52px}
+.panel{
+  background:rgba(255,255,255,.95);border:1px solid rgba(145,170,214,.3);
+  border-radius:27px;box-shadow:var(--shadow);padding:20px;margin-bottom:18px
+}
+.model-title{display:flex;justify-content:center;align-items:center;gap:10px;font-size:21px;font-weight:1000}
+.round-icon{
+  width:49px;height:49px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  background:#edf5ff;border:2px solid #d7e8ff;font-size:25px
+}
+.model-hint{margin:5px 0 13px;color:var(--muted);font-size:14px;font-weight:750}
+input{
+  width:min(100%,860px);height:57px;padding:12px 18px;border:2px solid #d6e4f5;border-radius:17px;
+  outline:none;font-size:16px;color:#23416d;background:#fff
+}
+input:focus{border-color:#79a9ff;box-shadow:0 0 0 4px rgba(121,169,255,.14)}
+button{border:0;cursor:pointer;font-family:inherit;font-weight:1000;transition:.16s}
+button:hover{transform:translateY(-2px)}
+.b-go{
+  min-width:350px;min-height:59px;margin-top:13px;padding:12px 25px;border-radius:19px;
+  color:#fff;font-size:18px;background:linear-gradient(135deg,#36a9ff,#176cf1);
+  box-shadow:0 8px 18px rgba(31,110,232,.24)
+}
+.b-go:before{content:"📷  "}
+#manual{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;max-width:900px;margin:0 auto
+}
+#manual button{
+  min-height:132px;padding:18px 22px;border-radius:28px;border:2px solid transparent;
+  display:flex;align-items:center;justify-content:flex-start;gap:16px;text-align:left;
+  box-shadow:0 12px 26px rgba(61,100,157,.10)
+}
+#manual button:hover{box-shadow:0 16px 30px rgba(61,100,157,.14)}
+#manual button:nth-child(1){background:linear-gradient(180deg,#eef6ff,#ddecff);border-color:#bfd9ff;color:#1456b3}
+#manual button:nth-child(2){background:linear-gradient(180deg,#f0fff5,#def5e7);border-color:#bce4c8;color:#17733e}
+.manual-icon{
+  width:70px;height:70px;flex:0 0 70px;border-radius:21px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.74);font-size:39px
+}
+.manual-text{display:flex;flex-direction:column;justify-content:center;gap:4px;width:100%}
+.manual-text small{font-size:13px;font-weight:800;opacity:.82}
+.manual-text strong{font-size:19px;line-height:1.22;font-weight:1000}
+#cam{
+  display:inline-block;overflow:hidden;border:5px solid #7186f4;border-radius:23px;
+  background:#fff;box-shadow:var(--shadow)
+}
+#cam:empty{display:none}
+#cam canvas{display:block;max-width:100%;height:auto}
+#bar{margin:10px 0 2px;color:#5e7096;font-size:14px;font-weight:800}
+#dbg{max-width:890px;margin:8px auto 0;min-height:0!important;color:#c63737!important;font-size:14px!important;font-weight:800}
+#dbg:not(:empty){padding:10px 14px;background:#fff1f1;border:1px solid #ffd0d0;border-radius:14px}
+#msg{
+  max-width:890px;margin:15px auto;padding:16px 18px;background:#fff;border:1px solid #e2eaf5;
+  border-radius:22px;box-shadow:0 7px 18px rgba(69,96,154,.08);
+  font-size:20px;font-weight:900;line-height:1.5;white-space:pre-line
+}
+#msg:empty{display:none}
+#menu:not(.hide),#answers:not(.hide){
+  max-width:890px;margin:0 auto;padding:15px;background:#fff;border:1px solid #e3eaf5;
+  border-radius:22px;box-shadow:var(--shadow)
+}
+#menu:not(.hide):before{content:"📚 Chọn chức năng";display:block;margin-bottom:10px;font-size:18px;font-weight:1000}
+.b-q,.b-s,.b-r,.b-a{min-height:55px;padding:11px 22px;margin:6px;border-radius:17px;color:#fff;font-size:17px}
+.b-q{min-width:230px;background:linear-gradient(135deg,#ffc04d,#ff8d15)}
+.b-q:before{content:"❓  "}
+.b-s{min-width:230px;background:linear-gradient(135deg,#55d77a,#16ae56)}
+.b-s:before{content:"📄  "}
+.b-r{background:linear-gradient(135deg,#ff7484,#ef3f5d)}
+.b-r:before{content:"↩  "}
+.b-a{min-width:108px;background:linear-gradient(135deg,#9d7dff,#7451e7)}
+.ans{
+  display:block;margin-top:10px;padding:13px 16px;text-align:left;border:1px solid #dfebf8;
+  border-radius:17px;background:#f7fbff;font-size:17px;font-weight:750
+}
+.ans div{padding:5px 0}
+.hide{display:none!important}
+@media(max-width:650px){
+  header:before,header:after{font-size:48px}
+  #manual{grid-template-columns:1fr}
+  #manual button{min-height:116px;padding:16px 18px;border-radius:24px}
+  .manual-icon{width:60px;height:60px;flex-basis:60px;font-size:34px}
+  .manual-text strong{font-size:17px}
+  .b-go,.b-q,.b-s{min-width:min(92%,320px)}
+  #msg{font-size:17px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hero-title">📚 THƯ VIỆN THCS THÔNG MINH</div>
+  <div class="hero-sub">Nhận diện SGK Toán lớp 6 và SGK Khoa học tự nhiên lớp 6</div>
+</header>
+
+<main>
+  <section id="setup" class="panel">
+    <div class="model-title"><span class="round-icon">🔗</span><span>Dán link model Teachable Machine</span></div>
+    <div class="model-hint">Dạng: https://teachablemachine.withgoogle.com/models/xxxx/</div>
+    <input id="url" placeholder="🔗 Link model">
+    <div><button class="b-go" onclick="startCam()">Bật camera &amp; nhận diện</button></div>
+  </section>
+
+  <section class="panel">
+    <div id="manual"></div>
+  </section>
+
+  <div id="cam"></div>
+  <div id="bar"></div>
+  <div id="dbg"></div>
+  <div id="msg"></div>
+
+  <div id="menu" class="hide">
+    <button class="b-q" onclick="startQuiz()">CÂU HỎI</button>
+    <button class="b-s" onclick="doSummary()">TÓM TẮT</button>
+    <div><button class="b-r" onclick="rescan()">QUÉT SÁCH KHÁC</button></div>
+  </div>
+
+  <div><button id="back" class="b-r hide" onclick="backToMenu()">QUAY LẠI</button></div>
+
+  <div id="answers" class="hide">
+    <button class="b-a" onclick="answer(0)">A</button>
+    <button class="b-a" onclick="answer(1)">B</button>
+    <button class="b-a" onclick="answer(2)">C</button>
+    <button class="b-r" onclick="backToMenu()">QUAY LẠI</button>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script>
+const BOOKS=[
+ {
+   id:"toan",ten:"SGK TOÁN LỚP 6",
+   kw:["toan","toan 6","toan_lop_6","toan6","sgk toan","sgk toán"],
+   tomtat:"SGK Toán lớp 6 giúp học sinh củng cố và mở rộng kiến thức về số tự nhiên, số nguyên, phân số và số thập phân; thực hiện các phép tính, tìm ước – bội, phân tích số ra thừa số nguyên tố và giải các bài toán thực tế. Học sinh đồng thời làm quen với một số kiến thức hình học như điểm, đường thẳng, đoạn thẳng, góc, các hình phẳng quen thuộc, tính chu vi và diện tích; bước đầu tiếp cận thống kê và xác suất thông qua việc thu thập, biểu diễn, đọc và phân tích dữ liệu. Qua đó, môn Toán giúp học sinh phát triển tư duy logic, khả năng tính toán, lập luận và vận dụng kiến thức để giải quyết các vấn đề trong học tập và đời sống.",
+   q:[
+    ["Số nào sau đây là số nguyên âm?","5","-3","0",1],
+    ["Số 12 có bao nhiêu ước dương?","4","5","6",2],
+    ["Số nào sau đây là bội của 6?","14","18","25",1],
+    ["Hình vuông có cạnh 5 cm thì diện tích bằng bao nhiêu?","10 cm²","20 cm²","25 cm²",2],
+    ["Việc thu thập và biểu diễn số liệu trong Toán học giúp học sinh làm gì?","Phân tích và so sánh thông tin","Chỉ học thuộc số liệu","Chỉ thực hiện phép cộng",0]
+   ],
+   audioTomtat:"toan_tomtat.mp3",
+   audioQ:["toan_cau1.mp3","toan_cau2.mp3","toan_cau3.mp3","toan_cau4.mp3","toan_cau5.mp3"]
+ },
+ {
+   id:"khtn",ten:"SGK KHOA HỌC TỰ NHIÊN LỚP 6",
+   kw:["khoa hoc tu nhien","khoa_hoc_tu_nhien","khoahoctunhien","khtn","khtn 6","khtn6","sgk khoa hoc tu nhien"],
+   tomtat:"SGK Khoa học tự nhiên lớp 6 giúp học sinh bước đầu khám phá thế giới tự nhiên thông qua các kiến thức cơ bản thuộc Vật lí, Hóa học, Sinh học và khoa học Trái Đất. Học sinh được tìm hiểu về đo lường, lực, chuyển động, nhiệt độ; các chất, tính chất và sự biến đổi của chất; tế bào, cơ thể sống, sự đa dạng của sinh vật; đồng thời tìm hiểu về Trái Đất, Mặt Trời và các hiện tượng trong tự nhiên. Thông qua quan sát, thí nghiệm và thực hành, môn học giúp học sinh hình thành tư duy khoa học, biết đặt câu hỏi, thu thập bằng chứng, giải thích hiện tượng và vận dụng kiến thức để bảo vệ sức khỏe, môi trường và giải quyết những vấn đề gần gũi trong cuộc sống.",
+   q:[
+    ["Dụng cụ nào thường được dùng để đo nhiệt độ?","Thước đo","Nhiệt kế","Cân",1],
+    ["Đơn vị cơ bản cấu tạo nên cơ thể sống là gì?","Tế bào","Mô hình","Khoáng vật",0],
+    ["Chất nào sau đây tồn tại ở thể khí trong điều kiện thường?","Nước đá","Khí oxygen","Muối ăn",1],
+    ["Lực có thể làm cho vật thay đổi điều gì?","Chuyển động hoặc hình dạng","Màu sắc của vật trong mọi trường hợp","Thành phần hóa học trong mọi trường hợp",0],
+    ["Học Khoa học tự nhiên giúp học sinh phát triển điều gì?","Khả năng quan sát, thực nghiệm và giải thích hiện tượng tự nhiên","Chỉ khả năng học thuộc lòng","Chỉ khả năng tính toán",0]
+   ],
+   audioTomtat:"khtn_tomtat.mp3",
+   audioQ:["khtn_cau1.mp3","khtn_cau2.mp3","khtn_cau3.mp3","khtn_cau4.mp3","khtn_cau5.mp3"]
+ }
+];
+
+const NGUONG=.9;
+const SO_KHUNG=8;
+const KHONG_SACH_KW=["khong_co_sach","khong co sach","khongcosach","no_book","no book","none","empty"];
+
+let ac=null;
+const player=new Audio();
+player.preload="auto";
+player.setAttribute("playsinline","");
+let oscs=[],unlocked=false;
+const $=id=>document.getElementById(id);
+const show=(id,on)=>$(id).classList.toggle("hide",!on);
+const say=t=>{$("msg").textContent=t||""};
+const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").toLowerCase();
+const isNoBook=name=>KHONG_SACH_KW.some(k=>norm(name).includes(norm(k)));
+const idxFromClass=name=>BOOKS.findIndex(b=>b.kw.some(k=>norm(name).includes(norm(k))));
+const displayLabel=name=>{
+ if(isNoBook(name))return"KHÔNG CÓ SÁCH";
+ const i=idxFromClass(name);return i>=0?BOOKS[i].ten:"ĐANG QUÉT";
+};
+
+function dbg(t){$("dbg").textContent=t||""}
+function unlockAudio(){
+ if(unlocked)return;unlocked=true;
+ try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==="suspended")ac.resume()}catch(e){}
+ player.muted=true;player.src="audio/toan_cau1.mp3?v=1";
+ player.play().then(()=>{player.pause();player.muted=false}).catch(()=>{player.muted=false});
+}
+["pointerdown","touchstart","click"].forEach(ev=>document.addEventListener(ev,unlockAudio,{capture:true}));
+function stopAudio(){try{player.pause()}catch(e){}oscs.forEach(o=>{try{o.stop()}catch(e){}});oscs=[]}
+function play(src){
+ stopAudio();if(!src)return Promise.resolve();
+ let u=src;if(!/^https?:\/\//i.test(u)&&!u.startsWith("audio/"))u="audio/"+u;
+ u+=(u.includes("?")?"&":"?")+"v=20261009";
+ return new Promise(res=>{
+  player.muted=false;player.onended=res;
+  player.onerror=()=>{dbg("Không tải được file "+u+". Kiểm tra thư mục audio.");res()};
+  player.src=u;const p=player.play();
+  if(p&&p.then)p.then(()=>dbg("")).catch(e=>{dbg("Không phát được audio: "+(e.message||e));res()});
+ });
+}
+function beep(ok){
+ try{
+  ac=ac||new(window.AudioContext||window.webkitAudioContext)();
+  if(ac.state==="suspended")ac.resume();
+  const notes=ok?[[660,0],[880,.15]]:[[220,0],[160,.18]];
+  notes.forEach(([f,t])=>{
+   const o=ac.createOscillator(),g=ac.createGain();o.type=ok?"sine":"square";o.frequency.value=f;
+   g.gain.setValueAtTime(.2,ac.currentTime+t);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+t+.25);
+   o.connect(g);g.connect(ac.destination);oscs.push(o);o.start(ac.currentTime+t);o.stop(ac.currentTime+t+.26);
+  });
+ }catch(e){}
+ return new Promise(r=>setTimeout(r,700));
+}
+
+let started=false,camActive=false,model,webcam,mode="idle",book=-1,qi=0,diem=0,streak=0,last=-1,run=0;
+
+$("manual").innerHTML=BOOKS.map((b,i)=>{
+ const icon=i===0?"📐":"🔬";
+ const sub="Sách giáo khoa lớp 6";
+ const main=i===0?"TOÁN":"KHOA HỌC TỰ NHIÊN";
+ return `<button onclick="chonSach(${i})">
+   <span class="manual-icon">${icon}</span>
+   <span class="manual-text"><small>${sub}</small><strong>${main}</strong></span>
+ </button>`;
+}).join("");
+
+async function startCam(){
+ const base=$("url").value.trim();
+ if(!base){say("Hãy dán link model trước.");return}
+ const url=base.endsWith("/")?base:base+"/";
+ show("menu",false);show("answers",false);show("back",false);
+ let stage="";
+ try{
+  stage="kiểm tra camera";
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("Trình duyệt không cho dùng camera");
+  stage="tải thư viện";
+  if(typeof tmImage==="undefined"||typeof tf==="undefined")throw new Error("Không tải được thư viện Teachable Machine");
+  stage="tải model";say("Đang tải model...");
+  const cb="?v="+Date.now();model=await tmImage.load(url+"model.json"+cb,url+"metadata.json"+cb);
+  stage="bật camera";await camOn();show("setup",false);started=true;mode="scan";
+  say("Hãy đưa SGK Toán 6 hoặc SGK Khoa học tự nhiên 6 vào camera...");
+  requestAnimationFrame(loop);
+ }catch(e){say('Lỗi ở bước "'+stage+'": '+((e&&e.message)||e))}
+}
+function setCameraTrackEnabled(on){
+ try{
+  const stream=webcam&&webcam.webcam&&webcam.webcam.srcObject;
+  if(stream)stream.getVideoTracks().forEach(track=>{track.enabled=on});
+ }catch(e){}
+}
+async function camOn(){
+ if(!webcam){
+  webcam=new tmImage.Webcam(320,320,true);
+  await webcam.setup();await webcam.play();
+ }else{
+  setCameraTrackEnabled(true);
+  try{if(webcam.webcam&&webcam.webcam.paused)await webcam.webcam.play()}catch(e){}
+ }
+ $("cam").innerHTML="";$("cam").appendChild(webcam.canvas);setCameraTrackEnabled(true);camActive=true;
+}
+function camOff(){
+ setCameraTrackEnabled(false);camActive=false;$("cam").innerHTML="";$("bar").textContent="";
+}
+async function loop(){
+ if(mode==="scan"&&camActive){
+  webcam.update();const p=await model.predict(webcam.canvas);
+  if(mode==="scan"){
+   const best=p.reduce((a,b)=>b.probability>a.probability?b:a);
+   const idx=idxFromClass(best.className),noBook=isNoBook(best.className);
+   $("bar").textContent=`${displayLabel(best.className)}: ${(best.probability*100).toFixed(0)}%`;
+   if(noBook&&best.probability>=NGUONG){
+    streak=0;last=-1;show("menu",false);show("answers",false);show("back",false);
+    say("Chưa phát hiện sách. Camera đang tiếp tục quét...");
+   }else if(idx>=0&&best.probability>=NGUONG){
+    streak=(idx===last)?streak+1:1;last=idx;if(streak>=SO_KHUNG)chonSach(idx);
+   }else{
+    streak=0;last=-1;say("Đang quét... Hãy đưa đúng bìa sách vào camera.");
+   }
+  }
+ }
+ requestAnimationFrame(loop);
+}
+async function rescan(){
+ run++;stopAudio();book=-1;streak=0;last=-1;show("menu",false);show("answers",false);show("back",false);
+ if(!started){show("setup",true);mode="idle";say("");return}
+ try{if(!camActive)await camOn();mode="scan";say("Hãy đưa SGK Toán 6 hoặc SGK Khoa học tự nhiên 6 vào camera...")}
+ catch(e){mode="idle";say("Không bật được camera: "+((e&&e.message)||e))}
+}
+async function chonSach(i){
+ book=i;mode="menu";camOff();show("menu",true);show("answers",false);show("back",false);
+ say("Đã nhận ra: "+BOOKS[i].ten+"\nChọn CÂU HỎI hoặc TÓM TẮT");
+}
+function backToMenu(){
+ run++;stopAudio();mode="menu";show("answers",false);show("back",false);show("menu",true);
+ say("Đã nhận ra: "+BOOKS[book].ten+"\nChọn CÂU HỎI hoặc TÓM TẮT");
+}
+async function doSummary(){
+ run++;show("menu",false);show("back",true);
+ say("Tóm tắt: "+BOOKS[book].ten+"\n"+BOOKS[book].tomtat);await play(BOOKS[book].audioTomtat);
+}
+function startQuiz(){run++;qi=0;diem=0;mode="quiz";show("menu",false);show("answers",true);speakQ()}
+function showQ(){
+ const q=BOOKS[book].q[qi],m=$("msg");m.innerHTML="";
+ const h=document.createElement("div");h.textContent=`Câu ${qi+1}: ${q[0]}`;
+ const box=document.createElement("div");box.className="ans";
+ ["A","B","C"].forEach((L,i)=>{const d=document.createElement("div");d.textContent=`Đáp án ${L}: ${q[i+1]}`;box.appendChild(d)});
+ m.appendChild(h);m.appendChild(box);
+}
+async function speakQ(){showQ();await play(BOOKS[book].audioQ[qi])}
+async function answer(k){
+ if(mode!=="quiz")return;mode="wait";const q=BOOKS[book].q[qi],L="ABC"[q[4]];
+ if(k===q[4]){diem++;stopAudio();say("QUÁ ĐÚNG! 🎉");await beep(true)}
+ else{stopAudio();say("SAI RỒI! Đáp án là "+L);await beep(false)}
+ qi++;
+ if(qi<BOOKS[book].q.length){mode="quiz";speakQ()}
+ else{show("answers",false);say(`Điểm của bạn: ${diem} / ${BOOKS[book].q.length}`);await new Promise(r=>setTimeout(r,3000));rescan()}
+}
+
+window.addEventListener("pagehide",()=>{
+ try{
+  if(webcam&&webcam.webcam&&webcam.webcam.srcObject)webcam.webcam.srcObject.getTracks().forEach(t=>t.stop());
+ }catch(e){}
+});
+</script>
+</body>
+</html>
